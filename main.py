@@ -11,7 +11,6 @@ PREFIX = "!"
 load_dotenv()
 TOKEN = getenv(C.env_name)
 
-
 class Bot(BotBase):
     def __init__(self):
         self.PREFIX = PREFIX
