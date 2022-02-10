@@ -20,6 +20,8 @@ class Verify(Cog):
 
     @cog_component()
     async def add_to_beta(self, ctx):
+        if ctx.author_id not in verify_messages.keys():
+            return
         await Users.set_user_beta_to(ctx.author_id, True)
         await ctx.send("You have been Successfully Added to the beta", hidden=True)
         await ctx.author.add_roles(*[server.beta_role])
@@ -27,6 +29,8 @@ class Verify(Cog):
 
     @cog_component()
     async def remove_from_beta(self, ctx):
+        if ctx.author_id not in verify_messages.keys():
+            return
         await Users.set_user_beta_to(ctx.author_id, False)
         await ctx.send("You have been successfully removed from beta list", hidden=True)
         await ctx.author.remove_roles(*[server.beta_role])
@@ -34,6 +38,8 @@ class Verify(Cog):
 
     @cog_component()
     async def change_wallet(self, ctx):
+        if ctx.author_id not in verify_messages.keys():
+            return
         user = await Users.get_user(ctx.author_id)
         address = user["accounts"][0]["address"]
         verify_messages[ctx.author_id]["to_delete"] = True
@@ -73,9 +79,7 @@ class Verify(Cog):
             await Users.save_user(userid, address)
         elif user["mode"] == "change":
             await Users.add_address(userid, address, [])
-            print(user)
             if "to_delete" in user.keys() and user["to_delete"] and user["delete_address"] != address:
-                print("uogybuboobuy")
                 await Users.remove_address(userid, user["delete_address"])
         else:
             return
