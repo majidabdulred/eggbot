@@ -1,6 +1,6 @@
 from discord import Embed
 from discord_slash import ButtonStyle
-from discord_slash.utils.manage_components import create_button, create_actionrow
+from discord_slash.utils.manage_components import create_button, create_actionrow, create_select, create_select_option
 
 opensea_link = "https://opensea.io/assets/matic/0x8634666ba15ada4bbc83b9dbf285f73d9e46e4c2/"
 from .slash_options import percent
@@ -73,8 +73,6 @@ def wallet_connect_message_2(userid):
     buttons2 = [
         create_button(style=ButtonStyle.URL, label="Connect", url=f"https://chickenderby.github.io/verify/?{userid}")]
     linkbuttons = create_actionrow(*buttons2)
-    verify_messages[userid]["mode"] = "change"
-    verify_messages[userid]["beta"] = True
 
     return embed, linkbuttons
 
@@ -92,14 +90,42 @@ def already_have_your_wallet(address):
     return embed, linkbuttons
 
 
+def create_change_wallet_button(msg):
+    change_wallet_msg = "\n\n**Change** : To change your wallet address if you have moved your chickens."
+
+    embed = Embed(title="Refresh", description=msg + change_wallet_msg)
+
+    button = [create_button(style=ButtonStyle.green, label="Change", custom_id="change_wallet")]
+    comps = create_actionrow(*button)
+    return embed, comps
+
+
+def wallet_connect_message_refresh(ctx):
+    embed = Embed(
+        description="Your wallet is not verified . You will need to verify your wallet in order to get roles and see your points.\n"
+                    "Click on **Connect** to verify your wallet. It will take you to a "
+                    "website starting with  `https://chickenderby.github.io` . \n"
+                    "Click on **Connect Metamask** on the website to connect your wallet.\n\n",
+        title="Connect Your Wallet")
+    buttons2 = [
+        create_button(style=ButtonStyle.URL, label="Connect",
+                      url=f"https://chickenderby.github.io/verify/?{ctx.author_id}"),
+        create_button(style=ButtonStyle.red, label="No Thanks!", custom_id="no_thanks")]
+    linkbuttons = create_actionrow(*buttons2)
+    verify_messages[ctx.author_id] = {}
+    verify_messages[ctx.author_id]["mode"] = "new"
+    verify_messages[ctx.author_id]["ctx_submitdata"] = ctx
+    return embed, linkbuttons
+
+
 def already_have_your_wallet_and_in_beta(address):
     embed = Embed(
         description=f"You are already in Beta list with this wallet address \n`{address}`.\n"
-                    f"**Remove** : Remove yourself from beta list.\n" 
+                    f"**Remove** : Remove yourself from beta list.\n"
                     f"**Change** : Change your wallet address.",
         title="Already Enrolled")
     buttons2 = [create_button(style=ButtonStyle.red, label="Remove", custom_id="remove_from_beta"),
-        create_button(style=ButtonStyle.green, label="Change", custom_id="change_wallet")]
+                create_button(style=ButtonStyle.green, label="Change", custom_id="change_wallet")]
     linkbuttons = create_actionrow(*buttons2)
 
     return embed, linkbuttons

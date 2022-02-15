@@ -7,9 +7,11 @@ from dotenv import load_dotenv
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from util import mylogs
 from util import constants as C
+
 PREFIX = "!"
 load_dotenv()
 TOKEN = getenv(C.env_name)
+
 
 class Bot(BotBase):
     def __init__(self):
@@ -23,12 +25,13 @@ class Bot(BotBase):
     def setup(self):
         self.load_extension(f"cogs.initialise")
         self.load_extension(f"cogs.commands")
+        self.load_extension(f"cogs.refresh")
         # self.load_extension(f"cogs.find")
         self.load_extension(f"cogs.verify")
-        mylogs.info("Cogs loaded.")
+        mylogs.info("COGS_LOADED")
 
     def run(self):
-        mylogs.info("Running Setup")
+        mylogs.info("Running Setup ....")
         self.setup()
 
         super().run(TOKEN, reconnect=True)
@@ -65,16 +68,15 @@ class Bot(BotBase):
             mylogs.warning("Bot reconnecting....")
         mylogs.info("Ready")
 
-
     async def signal_handler(self):
         mylogs.critical("Time to say good bye")
         await self.close()
 
     async def on_connect(self):
-        mylogs.info("Bot Connected")
+        mylogs.info("BOT_CONNECTED")
 
     async def on_disconnect(self):
-        mylogs.warning("Bot Disconnected")
+        mylogs.warning("BOT_DISCONNECTED")
 
 
 bot = Bot()

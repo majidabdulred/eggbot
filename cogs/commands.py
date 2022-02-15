@@ -15,6 +15,7 @@ import util.slash_options as op
 from db.chickens import get_chicken, get_many_chickens
 from util import create_embeds, mylogs
 import util.constants as C
+from tasks.refresh_role import UpdateUser
 
 
 class Token(Cog):
@@ -22,18 +23,21 @@ class Token(Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @command(name="!token", aliases=["t"])
+    @command(name="token", aliases=["t", " t", " token"])
     async def degradred1(self, ctx):
-        await ctx.reply("This command has been removed. Use slash command.\n"
-                        "/token")
+        mylogs.debug(f"DEPRECATED_COMMAND : token :{ctx.author.name}")
+        await ctx.reply("This command has been removed. Please use slash command.\n**/token**")
 
     @cog_slash(name="token", guild_ids=[C.serverid],
                description="Choose a token",
                options=op.options_token)
     async def getslashtoken(self, ctx, tokenid: int):
+        mylogs.debug(f"COMMAND_USED : token :{ctx.author.name} : {tokenid}")
+
         if not 1 <= tokenid <= 33333:
             await ctx.send(f"I couldn't find Chicken number {tokenid} .")
             return
+        await ctx.defer()
         chicken_data = await get_chicken(tokenid)
         embed = create_embeds.chicken(chicken_data)
         buttons2 = [create_button(style=ButtonStyle.URL, label="Opensea",
@@ -49,9 +53,10 @@ class Makegif(Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @command(name="gif")
+    @command(name="gif", aliases=["makegif"])
     @cooldown(20, 60, BucketType.guild)
     async def makegif(self, ctx, *args):
+        mylogs.debug(f"COMMAND_USED : gif :{ctx.author.name} : {args}")
         tokens, message = self._convert_args_to_token(args)
         if tokens is None:
             await ctx.reply(message)

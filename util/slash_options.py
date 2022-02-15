@@ -7,6 +7,29 @@ options_token = [
         option_type=4,
         required=True)]
 
+
+options_refreshuser = [
+    create_option(
+        name="userid",
+        description="user's id",
+        option_type=4,
+        required=False),
+    create_option(
+        required=False,
+        name="address",
+        description="Address to refresh",
+        option_type=3
+    )]
+"""SUB_COMMAND = 1
+SUB_COMMAND_GROUP = 2
+STRING = 3
+INTEGER = 4
+BOOLEAN = 5
+USER = 6
+CHANNEL = 7
+ROLE = 8
+MENTIONABLE = 9
+FLOAT = 10"""
 percent = {'Alien': 0.91, 'Amethyst': 10, 'Angry': 9, 'Anvil': 7, 'Autumn': 10, 'Bald Chicken': 13, 'Beauty': 9,
            'Black': 10, 'Black Hole': 0.51, 'Bloodshot': 9, 'Blue': 15, 'Blue Egg': 3, 'Blue Rooster': 7, 'Bulging': 9,
            'CK-47': 7, 'Candy': 2, 'Cherry Dusk': 0.54, 'Chicken': 24, 'Chickenapult': 8, 'Classic': 0.83,
@@ -57,4 +80,3 @@ options_find = [
         choices=[
             create_choice(name=trait, value=trait) for trait in trait_list[category]])
     for category in trait_list.keys()]
-

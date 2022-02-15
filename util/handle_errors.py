@@ -13,14 +13,14 @@ from datetime import timedelta
 
 def updateCheck(res, msg):
     if res.acknowledged and res.modified_count >= 1 and res.matched_count >= 1:
-        mylogs.info(f"Successful : {msg}")
+        mylogs.info(f"DB_SUCCESS : {msg}")
         return
     if not res.acknowledged:
-        mylogs.warning(f"Acknowledgment Failed : {msg}")
+        mylogs.warning(f"DB_ACK_FAILED : {msg}")
     if res.matched_count < 1:
-        mylogs.warning(f"Document Not Found: {msg}")
+        mylogs.warning(f"DB_NOT_FOUND : {msg}")
     if res.modified_count < 1:
-        mylogs.info(f"Already Updated: {msg}")
+        mylogs.info(f"DB_ALREADY_UPDATES: {msg}")
 
 
 def timeconvert(sec):

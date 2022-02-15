@@ -9,6 +9,7 @@ OPENSEA_API = "http://api.opensea.io/api/v2/assets/matic?"
 load_dotenv()
 header = {"X_API_KEY": getenv("X_API_KEY")}
 
+
 def _verify_results(chicks: list):
     response = []
     """Verifies that only chicken-derby nfts are in the response. Takes a list and returns a list"""
@@ -34,7 +35,7 @@ async def _get_chickens_1(address):
 
 async def _get_next(url):
     params = url.split("?")[1]
-    url = OPENSEA_API + "?" + params
+    url = OPENSEA_API + params
     async with request(method="GET", headers=header, url=url) as re:
         data = await re.json()
         if re.status != 200:
