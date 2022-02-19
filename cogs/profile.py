@@ -14,13 +14,13 @@ class Profile(Cog):
 
     @cog_slash(name="profile", guild_ids=[serverid])
     async def profile_slash(self, ctx):
-        if ctx.channel.id not in [server.robot_channel.id, 883616650711138354] or ctx.author != 510105779274121216:
-            mylogs.info(f"WRONG_CHANNEL : profile : {ctx.author.id} : {ctx.author.name}")
-            await ctx.reply(f"Please use bot commands in <#{server.robot_channel.id}> .", delete_after=30)
+        if ctx.channel.id in [854421758241013800, 883616650711138354] or ctx.author == 510105779274121216:
+            mylogs.info(f"COMMAND_USED : profile : {ctx.author.id} : {ctx.author.name}")
+            response = SlashProfile(ctx)
+            await response.run()
             return
-        mylogs.info(f"COMMAND_USED : profile : {ctx.author.id} : {ctx.author.name}")
-        response = SlashProfile(ctx)
-        await response.run()
+        mylogs.info(f"WRONG_CHANNEL : profile : {ctx.author.id} : {ctx.author.name}")
+        await ctx.reply(f"Please use bot commands in <#{server.robot_channel.id}> .", delete_after=30)
 
 
 def setup(bot):
