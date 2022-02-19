@@ -4,6 +4,7 @@ from discord_slash.utils.manage_components import create_button, create_actionro
 from prettytable import PrettyTable
 from discord_slash.utils.manage_components import wait_for_component
 from apis.polygonscan import get_previous_sales
+from util.logs import mylogs
 
 
 def convert_address(address, owner):
@@ -22,7 +23,6 @@ class Transactions:
         self.message = react.origin_message
         # self.address = "0x9254f7f72bc6294ad6569d1ab78139121db880f6"
         self.address = address
-
         self.url_sales_page = f"https://opensea.io/{self.address}/chicken-derby?tab=activity&search[isSingleCollection]=true&search[chains][0]=MATIC&search[eventTypes][0]=ASSET_TRANSFER"
 
     async def run(self):
@@ -31,8 +31,12 @@ class Transactions:
         embeds, comps = self._create()
         await self.react.edit_origin(embed=embeds[0], components=[comps])
         react = await wait_for_component(self.bot, self.message, timeout=180, check=self.check_author)
+        mylogs.debug(
+            f"OPTION_CHOOSE : TRANSACTIONS : {react.custom_id} : {self.react.author.id} : {self.react.author.name}")
         if react.custom_id == "more_token_sales":
             react = await self.sales_pagination_cycle(react, embeds)
+        mylogs.debug(
+            f"OPTION_CHOOSE : TRANSACTION : {react.custom_id} : {self.react.author.id} : {self.react.author.name}")
         return react
 
     def check_author(self, ctx):

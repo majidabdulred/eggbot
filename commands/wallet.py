@@ -6,6 +6,7 @@ from discord_slash.utils.manage_components import create_button, create_actionro
 
 from db.local_db import submit_datadb
 from tasks.process import delete_later
+from util.logs import mylogs
 
 
 class ChangeWallet:
@@ -19,8 +20,10 @@ class ChangeWallet:
         embed, comps = self.create_embed()
         await react.send(embed=embed, components=[comps], hidden=True)
         delete_later((self.user.id, (self.main_ctx, self.user)), submit_datadb, minutes=10)
+        mylogs.info(f"SEND_OLD_VERIFICATION_MESSAGE : {self.user.id} : {self.user.name}")
         react = await wait_for_component(self.bot, components=comps, check=self.check_author,
                                          timeout=180)
+        mylogs.debug(f"OPTION_CHOOSE : CHANGE_WALLET :  {react.custom_id} : {self.user.id} : {self.user.name}")
         react.custom_id = "go_back_verify"
         return react
 
@@ -54,6 +57,7 @@ class NewWallet:
     async def run(self, react):
         embed, comps = self.create_embed()
         await react.reply(embed=embed, components=[comps], hidden=True)
+        mylogs.info(f"SEND_NEW_VERIFICATION_MESSAGE : {self.user.id} : {self.user.name}")
         delete_later((self.user.id, (self.profile_ctx, self.user)), submit_datadb, minutes=10)
 
     def create_embed(self):

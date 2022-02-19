@@ -1,7 +1,7 @@
 from discord_slash import ButtonStyle
 from discord.embeds import Embed
 from discord_slash.utils.manage_components import create_button, create_actionrow, wait_for_component
-
+from util.logs import mylogs
 from db.users import get_user
 from commands.refresh_role import UpdateUser
 from .tokensales import Transactions
@@ -28,6 +28,7 @@ class SlashProfile:
         self.main_ctx = await self.profile_ctx.send(embed=self.main_embed, components=[*self.main_comps])
         while True:
             react = await wait_for_component(self.bot, self.main_ctx, timeout=180, check=self.check_author)
+            mylogs.debug(f"OPTION_CHOOSE : PROFILE : {react.custom_id} : {self.user.id} : {self.user.name}")
             if react.custom_id == "go_back_profile":
                 await self.main_ctx.edit(components=[])
             elif react.custom_id == "refresh_profile":
@@ -66,6 +67,7 @@ class SlashProfile:
         embed, comps = create_change_wallet_button(str_to_send)
         await self.main_ctx.edit(embed=embed, components=[comps])
         react = await wait_for_component(self.bot, self.main_ctx, timeout=180, check=self.check_author)
+        mylogs.debug(f"OPTION_CHOOSE : REFRESH :  {react.custom_id} : {self.user.id} : {self.user.name}")
         if react.custom_id == "change_wallet":
             change = ChangeWallet(self.main_ctx, self.bot, self.user)
             react = await change.run(react)
@@ -114,11 +116,13 @@ class SlashProfile:
     async def refresh_instance_data(self):
         self.userdb = await get_user(self.user.id)
         if not self.userdb:
+            mylogs.info(f"NEW_WALLET_REGISTRATION : {self.user.id} : {self.user.name}")
             await self.new_wallet_registration()
             return
         self.update_user = UpdateUser(self.bot, self.user)
         self.address = self.userdb["accounts"][0]["address"]
         self.main_embed, self.main_comps = await self._create_profile_embed()
+        mylogs.debug(f"PROFILE_INSTANCE_REFRESHED :  {self.user.id} : {self.user.name}")
 
     def check_author(self, ctx):
         return ctx.author_id == self.user.id
