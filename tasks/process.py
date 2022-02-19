@@ -3,6 +3,33 @@ from discord.user import User
 
 loop = asyncio.get_event_loop()
 dm_tasks = []
+from util.logs import mylogs
+
+
+async def _delete_it_set(ele, from_set, after):
+    await asyncio.sleep(after)
+    try:
+        from_set.remove(ele)
+    except KeyError:
+        mylogs.warning(f"VALUE_REMOVAL_ERROR : {ele} : {from_set}")
+
+
+async def _delete_it_dict(key, from_set, after):
+    await asyncio.sleep(after)
+    try:
+        from_set.pop(key)
+    except KeyError:
+        mylogs.warning(f"VALUE_REMOVAL_ERROR : {key} ")
+
+
+def delete_later(ele, db, hours=0, minutes=0, seconds=0):
+    secs = hours * 3600 + minutes * 60 + seconds
+    if isinstance(db, set):
+        db.add(ele)
+        loop.create_task(_delete_it_set(ele, db, secs))
+    elif isinstance(db, dict):
+        db[ele[0]] = ele[1]
+        loop.create_task(_delete_it_dict(ele[0], db, secs))
 
 
 def send_dm(user, embed):

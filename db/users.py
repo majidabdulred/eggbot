@@ -1,6 +1,5 @@
 import datetime
 from util import updateCheck
-
 from .mydb import db
 
 col = db.get_collection("test")
@@ -11,7 +10,7 @@ async def get_user(userid):
     return user
 
 
-async def get_user_from_address(address):
+async def get_users_from_address(address):
     cursor = col.find({"accounts.address": address})
     usersdb = await cursor.to_list(length=10)
     return usersdb
@@ -26,6 +25,13 @@ async def save_user(userid, address):
 async def set_user_beta_to(_id, value):
     res = await col.update_one({"_id": _id}, {"$set": {"beta": value}})
     updateCheck(res, f"Add to beta {_id}")
+
+
+async def set_address(userid, address):
+    res = await col.update_one({"_id": userid}, {"$set": {"accounts.0.address": address},
+                                                 "$currentDate": {"updatedAt": True}})
+
+    updateCheck(res, f"SET_NEW_ADDRESS : {userid} : {address} ")
 
 
 async def add_address(userid, address, chicks):

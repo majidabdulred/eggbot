@@ -2,7 +2,7 @@ from discord.utils import get
 from db.users import col, get_user, update_chick_sum
 from db.chickens import get_many_chickens
 from tasks.updatedb import main_update_chicks_one
-
+from util.logs import mylogs
 from db.local_db import server
 
 
@@ -10,14 +10,9 @@ class UpdateUser:
 
     def __init__(self, bot, user):
         self.bot = bot
-        self.cluck200_ = get(server.guild.roles, name="Cluck Norris")
-        self.attia100_199 = get(server.guild.roles, name="Attila The Hen")
-        self.chook50_99 = get(server.guild.roles, name="The Big Chook")
-        self.coop15_49 = get(server.guild.roles, name="Coop Commander")
-        self.rancher1_14 = get(server.guild.roles, name="Rancher")
-        self.all_roles = [self.cluck200_, self.chook50_99, self.coop15_49, self.attia100_199, self.rancher1_14]
         self.total_score_str = ""
         self.chickens = {"Serama": 0, "Sultan": 0, "Lakenvelder": 0, "Dorking": 0}
+        self.chickens_str0 = ""
         self.chickens_str = ""
         self.str_to_send = ""
         self.wallet_str = ""
@@ -27,25 +22,22 @@ class UpdateUser:
         self.user = user
         self.stop = False
         self.userdb = None
-        if None in self.all_roles:
-            print("A ROLE NOT FOUND,", self.all_roles)
-            self.stop = True
-        print("INITIALISED")
         self.count = 0
 
     async def exists(self):
-        self.userdb = await get_user(self.user.id)
-        if self.userdb is None:
-            return False
-        return True
+        return await get_user(self.user.id)
 
     async def refresh_single_user(self):
-        if self.stop:
-            print("END")
-            return
-        await main_update_chicks_one(self.userdb)
+
+        self.set_roles()
+        userdb = self.userdb if self.userdb else await get_user(self.user.id)
+        self.__init__(self.bot, self.user)
+        await main_update_chicks_one(userdb)
         self.userdb = await get_user(self.user.id)
         await self._update_member_role(self.userdb)
+
+    async def get_profile_info(self, userdb):
+        await self._update_member_role(userdb, just_info=True)
 
     def _count_chick_sum(self, userdb):
         csum = 0
@@ -53,29 +45,32 @@ class UpdateUser:
             csum += sum(acc["chicks"])
         return csum
 
-    async def _update_member_role(self, userdb):
+    async def _update_member_role(self, userdb, just_info=False):
         self.wallet_str = f"Wallet address is `{userdb['accounts'][0]['address']}`"
-        total_score = await self._get_total_score(userdb)
-        self.total_score_str = f"Your Total Points are **{total_score}** . "
-        if total_score > 0:
-            self.chickens_str = "You have "
+        self.total_score = await self._get_total_score(userdb)
+        self.total_score_str = f"Your Total Points are **{self.total_score}** . "
         for name, amount in self.chickens.items():
             if amount > 0:
-                self.chickens_str += f"**{amount}** {name} "
+                self.chickens_str0 += f"**{amount}** {name} "
+        if self.total_score > 0:
+            self.chickens_str = "You have " + self.chickens_str0
 
-        print(f"{userdb['_id']} : SCORE : {total_score}")
-        if total_score <= 0 and any([ro for ro in self.user.roles if ro in self.all_roles]):
+        if just_info:
+            return
+
+        mylogs.debug(f"{userdb['_id']} : SCORE : {self.total_score}")
+        if self.total_score <= 0 and any([ro for ro in self.user.roles if ro in self.all_roles]):
             await self.user.remove_roles(*self.all_roles)
             self.changed = True
-        elif 1 <= total_score < 15:
+        elif 1 <= self.total_score < 15:
             await self._data_add_to_list(self.rancher1_14)
-        elif 15 <= total_score < 50:
+        elif 15 <= self.total_score < 50:
             await self._data_add_to_list(self.coop15_49)
-        elif 50 <= total_score < 100:
+        elif 50 <= self.total_score < 100:
             await self._data_add_to_list(self.chook50_99)
-        elif 100 <= total_score < 200:
+        elif 100 <= self.total_score < 200:
             await self._data_add_to_list(self.attia100_199)
-        elif total_score >= 200:
+        elif self.total_score >= 200:
             await self._data_add_to_list(self.cluck200_)
         await update_chick_sum(self.user.id, self._count_chick_sum(userdb))
 
@@ -121,3 +116,13 @@ class UpdateUser:
             return 1
         else:
             pass
+
+    def set_roles(self):
+        self.cluck200_ = get(server.guild.roles, name="Cluck Norris")
+        self.attia100_199 = get(server.guild.roles, name="Attila The Hen")
+        self.chook50_99 = get(server.guild.roles, name="The Big Chook")
+        self.coop15_49 = get(server.guild.roles, name="Coop Commander")
+        self.rancher1_14 = get(server.guild.roles, name="Rancher")
+        self.all_roles = [self.cluck200_, self.chook50_99, self.coop15_49, self.attia100_199, self.rancher1_14]
+        if None in self.all_roles:
+            raise ValueError

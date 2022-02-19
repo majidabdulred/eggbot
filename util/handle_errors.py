@@ -1,14 +1,13 @@
-import traceback
-
 from pandas.core.indexing import IndexingError
 
 from util import mylogs
 
-from discord.errors import HTTPException, Forbidden
+from discord.errors import HTTPException, Forbidden,NotFound
 from discord.ext.commands import CommandNotFound, BadArgument, MissingRequiredArgument, BadBoolArgument, \
     CommandOnCooldown
 from discord_slash.error import IncorrectFormat
 from datetime import timedelta
+from asyncio.exceptions import TimeoutError
 
 
 def updateCheck(res, msg):
@@ -38,11 +37,26 @@ def timeconvert(sec):
 
 async def handle_errors(exc, ctx):
     if hasattr(exc, "original"):
+        error = exc.original
+    else:
+        error = exc
+    if isinstance(error, TimeoutError):
+        comps = ctx.message.components
+        comps[0]["components"] = [button for button in comps[0]["components"] if "url" in button.keys()]
+        await ctx.message.edit(components=[])
+        mylogs.debug(f"TIMEOUT : {ctx.message.id}")
+    elif isinstance(error,NotFound):
+        mylogs.error("Interaction Not Found")
+    else:
+        raise error
+
+
+async def old_handle_errors(exc, ctx):
+    if hasattr(exc, "original"):
         Error = exc.original
     else:
         Error = exc
     if isinstance(Error, AttributeError) and "'SlashContext' object has no attribute 'reply'" in Error.args:
-        print("Slash cannot reply")
         return
     if isinstance(Error, CommandNotFound):
         return
@@ -63,7 +77,6 @@ async def handle_errors(exc, ctx):
         await ctx.send("Don't have permissions")
 
     elif isinstance(Error, ValueError):
-        print(Error.args)
         if Error.args[0] == "OpenseaApiError":
             await ctx.send("Wrong Address")
         elif Error.args[0] == "LenAddress":

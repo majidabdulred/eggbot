@@ -1,6 +1,6 @@
 from discord import Embed
 from discord_slash import ButtonStyle
-from discord_slash.utils.manage_components import create_button, create_actionrow, create_select, create_select_option
+from discord_slash.utils.manage_components import create_button, create_actionrow
 
 opensea_link = "https://opensea.io/assets/matic/0x8634666ba15ada4bbc83b9dbf285f73d9e46e4c2/"
 from .slash_options import percent
@@ -95,7 +95,8 @@ def create_change_wallet_button(msg):
 
     embed = Embed(title="Refresh", description=msg + change_wallet_msg)
 
-    button = [create_button(style=ButtonStyle.green, label="Change", custom_id="change_wallet")]
+    button = [create_button(style=ButtonStyle.green, label="Change Wallet", custom_id="change_wallet"),
+              create_button(style=ButtonStyle.blue, label="Go Back", custom_id="go_back_refresh")]
     comps = create_actionrow(*button)
     return embed, comps
 

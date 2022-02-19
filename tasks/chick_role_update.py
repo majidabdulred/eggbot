@@ -60,7 +60,7 @@ class UpdateClass:
             loop.create_task(self._add_role(task))
             await asyncio.sleep(.1)
 
-        print("__DONE__")
+        mylogs.info("SUCCESS_REFRESHED_ALL_USERS")
 
     async def _add_role(self, data):
         user, role, userdb = data
@@ -93,6 +93,7 @@ class UpdateClass:
         mylogs.debug(f"{userdb['_id']} : SCORE : {total_score}")
 
         user = self.bot.server.get_member(userdb["_id"])
+
         if user is None:
             self.errored.append(("DISCORD_USER_NOT_FOUND", userdb['accounts'][0]["chicks"]))
             mylogs.debug(f"USER NOT FOUND : {userdb['_id']} : {total_score}")

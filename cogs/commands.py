@@ -15,7 +15,6 @@ import util.slash_options as op
 from db.chickens import get_chicken, get_many_chickens
 from util import create_embeds, mylogs
 import util.constants as C
-from tasks.refresh_role import UpdateUser
 
 
 class Token(Cog):
@@ -120,11 +119,11 @@ class Makegif(Cog):
         async with request("GET", image_url) as re:
             if re.status == 200:
                 con = await re.read()
-                print('Downloaded: ', filename)
+                mylogs.info(f'Downloaded: + {filename}')
                 im = imageio.imread(con, ".png")
                 return im
             else:
-                print(await re.text())
+                mylogs.error(str(await re.text()))
 
 
 def setup(bot):

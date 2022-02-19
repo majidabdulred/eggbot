@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from util import mylogs
 from util import constants as C
+from util.handle_errors import handle_errors
 
 PREFIX = "!"
 load_dotenv()
@@ -19,15 +20,14 @@ class Bot(BotBase):
         self.ready = False
         self.scheduler = AsyncIOScheduler()
         self.server = None
-        intents = Intents.all()
+        intents = Intents(guilds=True, members=True, messages=True)
         super().__init__(command_prefix=PREFIX, intents=intents)
 
     def setup(self):
-        self.load_extension(f"cogs.initialise")
         self.load_extension(f"cogs.commands")
-        self.load_extension(f"cogs.refresh")
-        # self.load_extension(f"cogs.find")
+        self.load_extension(f"cogs.initialise")
         self.load_extension(f"cogs.verify")
+        self.load_extension(f"cogs.profile")
         mylogs.info("COGS_LOADED")
 
     def run(self):
@@ -36,14 +36,14 @@ class Bot(BotBase):
 
         super().run(TOKEN, reconnect=True)
 
-    # async def on_command_error(self, context, exc):
-    #     await handle_errors(exc, context)
-    #
-    # async def on_slash_command_error(self, ctx, exc):
-    #     await handle_errors(exc, ctx)
-    #
-    # async def on_component_callback_error(self, ctx, ex):
-    #     await handle_errors(ex, ctx)
+    async def on_command_error(self, context, exc):
+        await handle_errors(exc, context)
+
+    async def on_slash_command_error(self, ctx, exc):
+        await handle_errors(exc, ctx)
+
+    async def on_component_callback_error(self, ctx, ex):
+        await handle_errors(ex, ctx)
 
     async def on_message(self, message: Message):
         if message.author != self.user:
