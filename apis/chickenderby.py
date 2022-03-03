@@ -19,3 +19,13 @@ async def get_chickens(chicks: list) -> list:
             raise ValueError("CRUN_API_ERROR", URL, res)
         results = await res.json()
         return results["body"]
+
+
+async def get_weth_price():
+    URL = "https://api.chickenderby.com/api/getCoinRate"
+    async with request("GET", URL) as res:
+        if res.status != 200:
+            raise ValueError("GET_COIN_RATE_ERROR", res)
+        results = await res.json()
+        price = results.get("weth")
+        return price

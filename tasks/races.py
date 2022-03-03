@@ -7,6 +7,7 @@ from db.local_db import server, scheduled_races
 from aiohttp import request
 from db.users import get_user_from_chickens
 from util.logs import mylogs
+from apis.chickenderby import get_weth_price
 
 loop = asyncio.get_event_loop()
 
@@ -34,11 +35,14 @@ def _filter_out_chicken_ids(race: dict) -> list:
     return chicken_ids
 
 
-def create_embed1(race: dict, users: list):
+def create_embed1(race: dict, users: list, wethprice):
+    print(race)
+    usd_fee = f"| ${round(race['fee'] * wethprice, 2)}" if wethprice else ""
+    usd_prize = f"| ${round(race['prizePool'] * wethprice, 2)}" if wethprice else ""
     desc = f"**Order : ** {race['peckingOrder']}\n" \
            f"**Distance : ** {race['distance']}\n" \
-           f"**Fee : ** Ξ{race['fee']} | ${race['feeUSD']}\n" \
-           f"**Prize Pool : ** Ξ{race['prizePool']} | ${race['prizePoolUSD']}\n"
+           f"**Fee : ** Ξ{race['fee']} {usd_fee}\n" \
+           f"**Prize Pool : ** Ξ{race['prizePool']} {usd_prize}\n"
     embed = Embed(title=race["name"], description=desc)
     hju = {}
     for lane in race['lanes']:
@@ -64,7 +68,8 @@ def create_embed1(race: dict, users: list):
 async def each_race(race):
     chicken_ids = _filter_out_chicken_ids(race)
     users = await get_user_from_chickens(chicken_ids)
-    embed, comps = create_embed1(race, users)
+    weth_price = await get_weth_price()
+    embed, comps = create_embed1(race, users, weth_price)
     timeleft = time_dif(race["startsAt"])
     if timeleft <= 0:
         pass
