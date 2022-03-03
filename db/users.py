@@ -16,6 +16,13 @@ async def get_users_from_address(address):
     return usersdb
 
 
+async def get_user_from_chickens(ids: list) -> list:
+    cursor = col.find({"accounts.0.chicks": {"$in": ids}})
+    res = await cursor.to_list(length=15)
+    print(res)
+    return res
+
+
 async def save_user(userid, address):
     """data = {'userid':219879210,'address':{'address':'0xxwd3131','chicks'}'"""
     user = {"_id": userid, "accounts": [{"address": address, "chicks": []}], "updatedAt": datetime.datetime.utcnow()}
