@@ -19,7 +19,6 @@ async def get_users_from_address(address):
 async def get_user_from_chickens(ids: list) -> list:
     cursor = col.find({"accounts.0.chicks": {"$in": ids}})
     res = await cursor.to_list(length=15)
-    print(res)
     return res
 
 
