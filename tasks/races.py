@@ -36,9 +36,9 @@ def _filter_out_chicken_ids(race: dict) -> list:
 
 def create_embed1(race: dict, users: list):
     desc = f"**Order : ** {race['peckingOrder']}\n" \
-           f"**Fee : ** {race['fee']}\n" \
            f"**Distance : ** {race['distance']}\n" \
-           f"**Prize Pool : ** {race['prizePool']}\n"
+           f"**Fee : ** Ξ{race['fee']} | ${race['feeUSD']}\n" \
+           f"**Prize Pool : ** Ξ{race['prizePool']} | ${race['prizePoolUSD']}\n"
     embed = Embed(title=race["name"], description=desc)
     hju = {}
     for lane in race['lanes']:
