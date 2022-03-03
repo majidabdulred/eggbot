@@ -36,7 +36,6 @@ def _filter_out_chicken_ids(race: dict) -> list:
 
 
 def create_embed1(race: dict, users: list, wethprice):
-    print(race)
     usd_fee = f"| ${round(race['fee'] * wethprice, 2)}" if wethprice else ""
     usd_prize = f"| ${round(race['prizePool'] * wethprice, 2)}" if wethprice else ""
     desc = f"**Order : ** {race['peckingOrder']}\n" \
