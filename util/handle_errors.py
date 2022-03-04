@@ -41,8 +41,8 @@ async def handle_errors(exc, ctx):
     else:
         error = exc
     if isinstance(error, TimeoutError):
-        comps = ctx.message.components
-        comps[0]["components"] = [button for button in comps[0]["components"] if "url" in button.keys()]
+        # comps = ctx.message.components
+        # comps[0]["components"] = [button for button in comps[0]["components"] if "url" in button.keys()]
         await ctx.message.edit(components=[])
         mylogs.debug(f"TIMEOUT : {ctx.message.id}")
     elif isinstance(error,NotFound):

@@ -28,6 +28,7 @@ class Bot(BotBase):
         self.load_extension(f"cogs.initialise")
         self.load_extension(f"cogs.verify")
         self.load_extension(f"cogs.profile")
+        self.load_extension(f"cogs.race")
         mylogs.info("COGS_LOADED")
 
     def run(self):

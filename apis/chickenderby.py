@@ -29,3 +29,14 @@ async def get_weth_price():
         results = await res.json()
         price = results.get("weth")
         return price
+
+
+async def get_race_data(raceid):
+    URL = f"https://api.chickenderby.com/api/race/get-race-data?raceId={raceid}"
+    async with request("GET", URL) as res:
+        if res.status == 400:
+            return None
+        elif res.status != 200:
+            raise ValueError("GET_RACE_DATA_ERROR", res)
+        results = await res.json()
+        return results
