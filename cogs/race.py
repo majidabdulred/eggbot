@@ -83,7 +83,7 @@ class Race:
         self.init_race_data(data)
         del data
         embed, comps = self.create_embed()
-        self.main_ctx = await self.pre_ctx.send(embed=embed, components=[comps])
+        self.main_ctx = await self.pre_ctx.send(f"{self.pre_ctx.author.mention}", embed=embed, components=[comps])
         while True:
             react = await wait_for_component(self.pre_ctx.bot, self.main_ctx, timeout=180, check=self.check_author)
             mylogs.debug(f"COMPONENT_USED : {react.custom_id} : {self.pre_ctx.author.name}")
