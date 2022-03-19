@@ -53,22 +53,25 @@ def create_embed1(race: dict, users: list, wethprice):
                 hju[chkid] = None
 
     count = 0
+    mention_users = ""
     for chicks in hju.items():
         count += 1
         if chicks[1]:
-            embed.add_field(name=f"Lane {count}", value=f"<@{chicks[1]['_id']}>\n")
+            mem = server.guild.get_member(chicks[1]['_id'])
+            embed.add_field(name=f"Lane {count}", value=mem.display_name)
+            mention_users += mem.mention
     buttons = [
         create_button(style=ButtonStyle.URL, label="Watch", url=f"https://play.chickenderby.com/?raceId={race['id']}")]
     linkbuttons = create_actionrow(*buttons)
     embed.set_author(name="Race Started")
-    return embed, linkbuttons
+    return mention_users, embed, linkbuttons
 
 
 async def each_race(race):
     chicken_ids = _filter_out_chicken_ids(race)
     users = await get_user_from_chickens(chicken_ids)
     weth_price = await get_weth_price()
-    embed, comps = create_embed1(race, users, weth_price)
+    text, embed, comps = create_embed1(race, users, weth_price)
     timeleft = time_dif(race["startsAt"])
     if timeleft <= 0:
         pass
@@ -76,7 +79,7 @@ async def each_race(race):
         mylogs.info(f"RACE_ADDED : {race['id']} : {timeleft} secs")
         await asyncio.sleep(timeleft + 10)
     mylogs.info(f"RACE_SEND : {race['id']}")
-    await server.race_started.send(embed=embed, components=[comps])
+    await server.race_started.send(text, embed=embed, components=[comps])
 
 
 async def sch():
