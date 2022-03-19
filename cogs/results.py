@@ -1,22 +1,15 @@
 from .race import Race
-from discord import Embed
-from discord.ext.commands import Cog
-from discord_slash import ButtonStyle
-from discord_slash.cog_ext import cog_slash
-from discord_slash.utils.manage_components import create_button, create_actionrow, wait_for_component
-from prettytable import PrettyTable
-from datetime import datetime
+from discord_slash.utils.manage_components import wait_for_component
+
 from apis.chickenderby import get_race_data
-from util.constants import serverid
-from discord_slash.utils.manage_commands import create_option
+
 from util import mylogs
-from util.models import RacedChicken
 
 
 # discord.errors.HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
 
 async def handle_component(ctx):
-    print(ctx.custom_id)
+    mylogs.info(f"COMPONENTS_USED : {ctx.custom_id} : {ctx.author.name} : {ctx.author_id}")
     raceid = int(ctx.custom_id.lstrip("results_chickens_"))
     if not raceid: raise ArithmeticError
     race = HandleComponentChickens(ctx)

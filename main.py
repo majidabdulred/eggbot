@@ -56,7 +56,10 @@ class Bot(BotBase):
 
     async def on_component(self, ctx):
         if ctx.custom_id.startswith("results_chickens_"):
-            await handle_component(ctx)
+            try:
+                await handle_component(ctx)
+            except Exception as E:
+                await handle_errors(E, ctx)
 
     async def on_ready(self):
         self.data_channel = self.get_channel(C.data_channel)
