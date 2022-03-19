@@ -39,7 +39,8 @@ async def _get_next(url):
     async with request(method="GET", headers=header, url=url) as re:
         data = await re.json()
         if re.status != 200:
-            raise ValueError("CluckNorris")
+            mylogs.error(f"_GET_NEXT_ERROR : {url} : {await re.text()}")
+            raise ValueError
         return data
 
 

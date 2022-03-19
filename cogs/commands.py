@@ -17,34 +17,6 @@ from util import create_embeds, mylogs
 import util.constants as C
 
 
-class Token(Cog):
-
-    def __init__(self, bot):
-        self.bot = bot
-
-    @command(name="token", aliases=["t", " t", " token"])
-    async def degradred1(self, ctx):
-        mylogs.debug(f"DEPRECATED_COMMAND : token :{ctx.author.name}")
-        await ctx.reply("This command has been removed. Please use slash command.\n**/token**")
-
-    @cog_slash(name="token", guild_ids=[C.serverid],
-               description="Choose a token",
-               options=op.options_token)
-    async def getslashtoken(self, ctx, tokenid: int):
-        mylogs.debug(f"COMMAND_USED : token :{ctx.author.name} : {tokenid}")
-
-        if not 1 <= tokenid <= 33333:
-            await ctx.send(f"I couldn't find Chicken number {tokenid} .")
-            return
-        await ctx.defer()
-        chicken_data = await get_chicken(tokenid)
-        embed = create_embeds.chicken(chicken_data)
-        buttons2 = [create_button(style=ButtonStyle.URL, label="Opensea",
-                                  url=f"{create_embeds.opensea_link}{tokenid}?ref=0xc96b13e952e77d2f9accb33597c216d96ed91395"),
-                    create_button(style=ButtonStyle.URL, label="Polygonscan",
-                                  url=f"https://polygonscan.com/token/0x8634666ba15ada4bbc83b9dbf285f73d9e46e4c2?a={tokenid}")]
-        linkbuttons = create_actionrow(*buttons2)
-        await ctx.send(f"{ctx.author.mention}", embed=embed, components=[linkbuttons])
 
 
 class Makegif(Cog):
@@ -127,5 +99,4 @@ class Makegif(Cog):
 
 
 def setup(bot):
-    bot.add_cog(Token(bot))
     bot.add_cog(Makegif(bot))

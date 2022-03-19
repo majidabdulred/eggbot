@@ -3,6 +3,7 @@ import asyncio
 from discord.ext.commands import Cog, command
 from tasks.races import race_scheduler
 from db import db, server
+from tasks.results import scheduler_race_results
 from util import serverid, mylogs
 from discord import utils
 
@@ -33,7 +34,8 @@ class Verify(Cog):
         server.__setattr__("beta_role", beta_role)
         loop = asyncio.get_event_loop()
         loop.create_task(race_scheduler(20))
-        mylogs.info("Server INIT Complete")
+        loop.create_task(scheduler_race_results(10))
+        mylogs.info("Completed Server Initialisation")
 
     def _set_server(self, channels):
         """Created the server class and provides all the values"""

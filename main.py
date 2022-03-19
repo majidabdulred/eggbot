@@ -4,10 +4,11 @@ from discord_slash import SlashCommand
 from discord.ext.commands import Bot as BotBase
 from os import getenv
 from dotenv import load_dotenv
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from util import mylogs
 from util import constants as C
 from util.handle_errors import handle_errors
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from cogs.results import handle_component
 
 PREFIX = "!"
 load_dotenv()
@@ -27,6 +28,7 @@ class Bot(BotBase):
         self.load_extension(f"cogs.commands")
         self.load_extension(f"cogs.initialise")
         self.load_extension(f"cogs.verify")
+        self.load_extension(f"cogs.token")
         self.load_extension(f"cogs.profile")
         self.load_extension(f"cogs.race")
         mylogs.info("COGS_LOADED")
@@ -51,6 +53,10 @@ class Bot(BotBase):
             ctx = await self.get_context(message)
             if ctx.valid:
                 await self.invoke(ctx)
+
+    async def on_component(self, ctx):
+        if ctx.custom_id.startswith("results_chickens_"):
+            await handle_component(ctx)
 
     async def on_ready(self):
         self.data_channel = self.get_channel(C.data_channel)

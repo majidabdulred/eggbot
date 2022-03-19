@@ -46,7 +46,9 @@ async def handle_errors(exc, ctx):
         await ctx.message.edit(components=[])
         mylogs.debug(f"TIMEOUT : {ctx.message.id}")
     elif isinstance(error,NotFound):
-        mylogs.error("Interaction Not Found")
+        mylogs.error("INTERACTION_NOT_FOUND")
+    elif isinstance(error,ValueError):
+        pass
     else:
         raise error
 
