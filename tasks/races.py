@@ -58,6 +58,8 @@ def create_embed1(race: dict, users: list, wethprice):
         count += 1
         if chicks[1]:
             mem = server.guild.get_member(int(chicks[1]['_id']))
+            if not mem:
+                continue
             embed.add_field(name=f"Lane {count}", value=mem.display_name)
             mention_users += mem.mention
     buttons = [
@@ -94,3 +96,112 @@ async def race_scheduler(t):
     while True:
         loop.create_task(sch())
         await asyncio.sleep(t)
+rows = {
+    "count": 1,
+    "rows": [
+        {
+            "id": 9064,
+            "_id": "d2296fd7-1586-4bb6-bbda-94cd5ec6c0ad",
+            "name": "Prague Track",
+            "peckingOrder": "A",
+            "terrainId": 7,
+            "distance": 180,
+            "fee": 0.00075,
+            "maxCapacity": 12,
+            "currentCapacity": 12,
+            "location": "Prague, Czech Republic",
+            "minimumStartDelay": 3,
+            "status": "scheduled",
+            "startTime": 0,
+            "prizePool": 0.0081,
+            "paidStatus": "unpaid",
+            "unlimitPO": 0,
+            "startsAt": "2022-03-19T18:31:50.000Z",
+            "endsAt": "2022-03-19T18:33:43.000Z",
+            "payoutAttempts": 0,
+            "type": "automatic",
+            "group": 4,
+            "lanes": [
+                {
+                    "lane": 1,
+                    "assigned": True,
+                    "chickenId": "24409",
+                    "userWalletId": 956
+                },
+                {
+                    "lane": 2,
+                    "assigned": True,
+                    "chickenId": "32849",
+                    "userWalletId": 1691
+                },
+                {
+                    "lane": 3,
+                    "assigned": True,
+                    "chickenId": "14006",
+                    "userWalletId": 927
+                },
+                {
+                    "lane": 4,
+                    "assigned": True,
+                    "chickenId": "865",
+                    "userWalletId": 1985
+                },
+                {
+                    "lane": 5,
+                    "assigned": True,
+                    "chickenId": "24099",
+                    "userWalletId": 265
+                },
+                {
+                    "lane": 6,
+                    "assigned": True,
+                    "chickenId": "2798",
+                    "userWalletId": 986
+                },
+                {
+                    "lane": 7,
+                    "assigned": True,
+                    "chickenId": "2603",
+                    "userWalletId": 2502
+                },
+                {
+                    "lane": 8,
+                    "assigned": True,
+                    "chickenId": "22077",
+                    "userWalletId": 95
+                },
+                {
+                    "lane": 9,
+                    "assigned": True,
+                    "chickenId": "1357",
+                    "userWalletId": 2776
+                },
+                {
+                    "lane": 10,
+                    "assigned": True,
+                    "chickenId": "26050",
+                    "userWalletId": 92
+                },
+                {
+                    "lane": 11,
+                    "assigned": True,
+                    "chickenId": "3986",
+                    "userWalletId": 1691
+                },
+                {
+                    "lane": 12,
+                    "assigned": True,
+                    "chickenId": "13688",
+                    "userWalletId": 92
+                }
+            ],
+            "feeUSD": 2.21,
+            "prizePoolUSD": 23.91,
+            "createdAt": "2022-03-19T18:12:04.000Z",
+            "updatedAt": "2022-03-19T18:32:00.000Z",
+            "terrain": {
+                "name": "Track",
+                "image": "/terrain/track_icon.png"
+            }
+        }
+    ]}
