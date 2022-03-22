@@ -33,6 +33,11 @@ async def set_user_beta_to(_id, value):
     updateCheck(res, f"Add to beta {_id}")
 
 
+async def set_notify_race_started(_id, value: bool):
+    res = await col.update_one({"_id": _id}, {"$set": {"notify_race_started": value}})
+    updateCheck(res, f"SET_NOTIFY_RACE_STARTED {value} {_id}")
+
+
 async def set_address(userid, address):
     res = await col.update_one({"_id": userid}, {"$set": {"accounts.0.address": address},
                                                  "$currentDate": {"updatedAt": True}})

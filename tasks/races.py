@@ -61,9 +61,11 @@ def create_embed1(race: dict, users: list, wethprice):
             if not mem:
                 continue
             embed.add_field(name=f"Lane {count}", value=mem.display_name)
-            mention_users += mem.mention
+            if chicks[1].get("notify_race_started") in (None, True):
+                mention_users += mem.mention
     buttons = [
-        create_button(style=ButtonStyle.URL, label="Watch", url=f"https://play.chickenderby.com/?raceId={race['id']}")]
+        create_button(style=ButtonStyle.URL, label="Watch", url=f"https://play.chickenderby.com/?raceId={race['id']}"),
+        create_button(style=ButtonStyle.blue, label="Notify On/Off", custom_id="notification_race_started")]
     linkbuttons = create_actionrow(*buttons)
     embed.set_author(name="Race Started")
     return mention_users, embed, linkbuttons
@@ -79,9 +81,9 @@ async def each_race(race):
         pass
     else:
         mylogs.info(f"RACE_ADDED : {race['id']} : {timeleft} secs")
-        await asyncio.sleep(timeleft + 10)
+        await asyncio.sleep(timeleft + 3)
     mylogs.info(f"RACE_SEND : {race['id']}")
-    await server.race_started.send(embed=embed, components=[comps])
+    await server.race_started.send(text, embed=embed, components=[comps])
 
 
 async def sch():
@@ -100,24 +102,24 @@ rows = {
     "count": 1,
     "rows": [
         {
-            "id": 9064,
-            "_id": "d2296fd7-1586-4bb6-bbda-94cd5ec6c0ad",
-            "name": "Prague Track",
+            "id": 9572,
+            "_id": "a58f5f6a-e23e-4411-8f36-d44736e77579",
+            "name": "Bridge Crossing",
             "peckingOrder": "A",
-            "terrainId": 7,
-            "distance": 180,
-            "fee": 0.00075,
+            "terrainId": 4,
+            "distance": 120,
+            "fee": 0.001,
             "maxCapacity": 12,
             "currentCapacity": 12,
-            "location": "Prague, Czech Republic",
+            "location": "Córdoba, Spain",
             "minimumStartDelay": 3,
             "status": "scheduled",
             "startTime": 0,
-            "prizePool": 0.0081,
+            "prizePool": 0.0108,
             "paidStatus": "unpaid",
             "unlimitPO": 0,
-            "startsAt": "2022-03-19T18:31:50.000Z",
-            "endsAt": "2022-03-19T18:33:43.000Z",
+            "startsAt": "2022-03-21T17:03:30.000Z",
+            "endsAt": "2022-03-21T17:04:58.000Z",
             "payoutAttempts": 0,
             "type": "automatic",
             "group": 4,
@@ -125,83 +127,84 @@ rows = {
                 {
                     "lane": 1,
                     "assigned": True,
-                    "chickenId": "24409",
-                    "userWalletId": 956
+                    "chickenId": "2274",
+                    "userWalletId": 2274
                 },
                 {
                     "lane": 2,
                     "assigned": True,
-                    "chickenId": "32849",
-                    "userWalletId": 1691
+                    "chickenId": "5781",
+                    "userWalletId": 2231
                 },
                 {
                     "lane": 3,
                     "assigned": True,
-                    "chickenId": "14006",
-                    "userWalletId": 927
+                    "chickenId": "10529",
+                    "userWalletId": 120
                 },
                 {
                     "lane": 4,
-                    "assigned": True,
-                    "chickenId": "865",
-                    "userWalletId": 1985
-                },
-                {
-                    "lane": 5,
-                    "assigned": True,
-                    "chickenId": "24099",
-                    "userWalletId": 265
-                },
-                {
-                    "lane": 6,
-                    "assigned": True,
-                    "chickenId": "2798",
-                    "userWalletId": 986
-                },
-                {
-                    "lane": 7,
-                    "assigned": True,
-                    "chickenId": "2603",
-                    "userWalletId": 2502
-                },
-                {
-                    "lane": 8,
-                    "assigned": True,
-                    "chickenId": "22077",
-                    "userWalletId": 95
-                },
-                {
-                    "lane": 9,
-                    "assigned": True,
-                    "chickenId": "1357",
-                    "userWalletId": 2776
-                },
-                {
-                    "lane": 10,
                     "assigned": True,
                     "chickenId": "26050",
                     "userWalletId": 92
                 },
                 {
+                    "lane": 5,
+                    "assigned": True,
+                    "chickenId": "11627",
+                    "userWalletId": 148
+                },
+                {
+                    "lane": 6,
+                    "assigned": True,
+                    "chickenId": "865",
+                    "userWalletId": 1985
+                },
+                {
+                    "lane": 7,
+                    "assigned": True,
+                    "chickenId": "22077",
+                    "userWalletId": 95
+                },
+                {
+                    "lane": 8,
+                    "assigned": True,
+                    "chickenId": "24097",
+                    "userWalletId": 1129
+                },
+                {
+                    "lane": 9,
+                    "assigned": True,
+                    "chickenId": "3143",
+                    "userWalletId": 2025
+                },
+                {
+                    "lane": 10,
+                    "assigned": True,
+                    "chickenId": "14261",
+                    "userWalletId": 724
+                },
+                {
                     "lane": 11,
                     "assigned": True,
-                    "chickenId": "3986",
-                    "userWalletId": 1691
+                    "chickenId": "30509",
+                    "userWalletId": 62
                 },
                 {
                     "lane": 12,
                     "assigned": True,
-                    "chickenId": "13688",
-                    "userWalletId": 92
+                    "chickenId": "14473",
+                    "userWalletId": 1926
                 }
             ],
-            "feeUSD": 2.21,
-            "prizePoolUSD": 23.91,
-            "createdAt": "2022-03-19T18:12:04.000Z",
-            "updatedAt": "2022-03-19T18:32:00.000Z",
+            "feeUSD": 2.92,
+            "prizePoolUSD": 31.49,
+            "createdAt": "2022-03-21T16:53:45.000Z",
+            "updatedAt": "2022-03-21T17:03:40.000Z",
             "terrain": {
-                "name": "Track",
-                "image": "/terrain/track_icon.png"
+                "name": "Rock",
+                "image": "/terrain/rock_icon.png"
             }
         }
-    ]}
+    ]
+}

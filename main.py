@@ -8,7 +8,7 @@ from util import mylogs
 from util import constants as C
 from util.handle_errors import handle_errors
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from cogs.results import handle_component
+from cogs.comps import handle_component
 
 PREFIX = "!"
 load_dotenv()
@@ -55,7 +55,7 @@ class Bot(BotBase):
                 await self.invoke(ctx)
 
     async def on_component(self, ctx):
-        if ctx.custom_id.startswith("results_chickens_"):
+        if ctx.custom_id.startswith("results_chickens_") or ctx.custom_id == "notification_race_started":
             try:
                 await handle_component(ctx)
             except Exception as E:
