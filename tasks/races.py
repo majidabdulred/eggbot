@@ -46,7 +46,7 @@ def create_embed1(race: dict, users: list, wethprice):
     hju = {}
     for lane in race['lanes']:
         for user in users:
-            if (chkid := int(lane["chickenId"])) in user["accounts"][0]["chicks"]:
+            if (chkid := int(lane["tokenId"])) in user["accounts"][0]["chicks"]:
                 hju[chkid] = user
                 break
             else:
