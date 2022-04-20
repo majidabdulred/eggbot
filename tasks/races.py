@@ -31,7 +31,7 @@ async def _make_call():
 def _filter_out_chicken_ids(race: dict) -> list:
     chicken_ids = []
     for lane in race["lanes"]:
-        chicken_ids.append(int(lane["chickenId"]))
+        chicken_ids.append(int(lane["tokenId"]))
     return chicken_ids
 
 
