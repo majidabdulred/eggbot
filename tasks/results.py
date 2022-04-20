@@ -38,7 +38,7 @@ class RaceResults:
     def __init__(self, data):
         self.results_channel = server.race_results
         self.chickens = []
-        for chick in data["gameInfo"]["chickens"]:
+        for chick in data["chickens"]:
             self.chickens.append(RacedChicken(chick))
         info = data.get("race")
         self.id = info.get("id")
