@@ -65,7 +65,8 @@ def create_embed1(race: dict, users: list, wethprice):
                 mention_users += mem.mention
     buttons = [
         create_button(style=ButtonStyle.URL, label="Watch", url=f"https://play.chickenderby.com/?raceId={race['id']}"),
-        create_button(style=ButtonStyle.blue, label="Notify On/Off", custom_id="notification_race_started")]
+        # create_button(style=ButtonStyle.blue, label="Notify On/Off", custom_id="notification_race_started")
+    ]
     linkbuttons = create_actionrow(*buttons)
     embed.set_author(name="Race Started")
     return mention_users, embed, linkbuttons
@@ -83,7 +84,7 @@ async def each_race(race):
         mylogs.info(f"RACE_ADDED : {race['id']} : {timeleft} secs")
         await asyncio.sleep(timeleft + 3)
     mylogs.info(f"RACE_SEND : {race['id']}")
-    await server.race_started.send(text, embed=embed, components=[comps])
+    await server.race_started.send(embed=embed, components=[comps])
 
 
 async def sch():
