@@ -133,7 +133,7 @@ class Race:
         return embed, row
 
     def init_race_data(self, data):
-        for chick in data["result"]["gameInfo"]["chickens"]:
+        for chick in data["result"]["chickens"]:
             self.chickens.append(RacedChicken(chick))
         self.id = data.get("id")
         self.race_name = data.get("name")
