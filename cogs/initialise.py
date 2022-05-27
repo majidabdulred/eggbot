@@ -1,7 +1,6 @@
 import asyncio
 from discord.ext.commands import Cog, command
 from tasks.races import race_scheduler
-from tasks.member_count import member_scheduler
 from db import db, server
 from tasks.results import scheduler_race_results
 from util import serverid, mylogs
@@ -34,9 +33,8 @@ class Verify(Cog):
         server.__setattr__("whitelist_role", whitelist)
 
         loop = asyncio.get_event_loop()
-        # loop.create_task(race_scheduler(20))
-        # loop.create_task(scheduler_race_results(10))
-        # loop.create_task(whitelist_counter())
+        loop.create_task(race_scheduler(20))
+        loop.create_task(scheduler_race_results(10))
         mylogs.info("Completed Server Initialisation")
 
     def _set_server(self, channels):
