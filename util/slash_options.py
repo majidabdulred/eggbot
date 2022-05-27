@@ -7,6 +7,14 @@ options_token = [
         option_type=4,
         required=True)]
 
+options_whitelist = [
+    create_option(
+        name="address",
+        description="Enter the wallet address to whitelist.",
+        option_type=3,
+        required=True
+    )
+]
 
 
 options_refreshuser = [
