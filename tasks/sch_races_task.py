@@ -68,7 +68,7 @@ def create_embed1(race: dict, users: list, wethprice):
         # create_button(style=ButtonStyle.blue, label="Notify On/Off", custom_id="notification_race_started")
     ]
     linkbuttons = create_actionrow(*buttons)
-    embed.set_author(name="Race Started")
+    embed.set_author(name="RaceModel Started")
     return mention_users, embed, linkbuttons
 
 
