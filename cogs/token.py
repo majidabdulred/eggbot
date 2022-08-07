@@ -7,10 +7,11 @@ from discord_slash.cog_ext import cog_slash
 from discord_slash.utils.manage_components import create_button, create_actionrow, wait_for_component
 
 import util.slash_options as op
-from util import  mylogs
+from util import mylogs
 import util.constants as C
 from apis.chickenderby import get_chickens, get_chicken_race_history
 from prettytable import PrettyTable
+from models.model_get_chicken import Chicken
 
 opensea_link = "https://opensea.io/assets/matic/0x8634666ba15ada4bbc83b9dbf285f73d9e46e4c2/"
 
@@ -32,8 +33,6 @@ class Token(Cog):
         mylogs.info(f"COMMAND_USED : chicken : {tokenid} : {ctx.author.name} : {ctx.author.id}")
         res = GetChicken(ctx)
         await res.run(tokenid)
-        # res = ChickenRaces(ctx, tokenid, 20)
-        # await res.run()
 
 
 def setup(bot):
@@ -53,21 +52,21 @@ class GetChicken:
         response = await get_chickens([chickenid])
         if len(response) == 0:
             raise AssertionError
-        self.data = ChickenClass(response[0])
+        self.data: Chicken = response[chickenid]
         embed, row = self.create_chicken_embed()
         await self.pre_ctx.send(embed=embed, components=[row])
 
     def create_chicken_embed(self) -> tuple:
         embed = Embed(title=self.data.name)
-        embed.set_author(name=self.id)
+        embed.set_author(name=self.data.id)
         embed.set_image(url=self.data.image)
 
         embed.add_field(name="Heritage", value=self.data.heritage)
         embed.add_field(name="Perfection", value=self.data.perfection)
-        embed.add_field(name="POP", value=self.data.POP)
+        embed.add_field(name="POP", value=self.data.poPoints)
         embed.add_field(name="Races", value=self.data.races)
         embed.add_field(name="Performance", value=self.data.performance)
-        embed.add_field(name="Total Earnings", value=f"${self.data.total_earnings}")
+        embed.add_field(name="Total Earnings", value=f"${self.data.earnings}")
         embed.add_field(name="Talent", value=self.data.talent)
         embed.add_field(name="Gender", value=self.data.gender)
         if self.data.beakAccessory:
@@ -83,38 +82,6 @@ class GetChicken:
 
         row = create_actionrow(*buttons)
         return embed, row
-
-
-class ChickenClass:
-    def __init__(self, data):
-        self.id = int(data.get("tokenId"))
-        self.image = data.get("image")
-        self.name = data.get("name") if data.get("name") else data.get("id")
-        info = data.get("info")
-        self.stock = info.get("stock")
-        self.talent = info.get("talent")
-        self.heritage = info.get("heritage")
-        self.gender = info.get("gender")
-        self.baseBody = info.get("baseBody")
-        self.eyesType = info.get("eyesType")
-        self.beakColor = info.get("beakColor")
-        self.stripes = info.get("stripes")
-        self.combColor = info.get("combColor")
-        self.wattleColor = info.get("wattleColor")
-
-        self.beakAccessory = info.get("beakAccessory")
-        self.background = info.get("background")
-        self.legs = info.get("legs")
-        self.situation = info.get("situation")
-        self.terrainPreference = info.get("terrainPreference")
-        self.consistency = info.get("consistency")
-        self.longDistanceTrait = info.get("longDistanceTrait")
-        self.terrainPreferencePlusTrait = info.get("terrainPreferencePlusTrait")
-        self.races = info.get("races")
-        self.performance = f"{info.get('firsts')}/{info.get('seconds')}/{info.get('thirds')}"
-        self.total_earnings = info.get("earnings") if info.get("earnings") else 0
-        self.POP = info.get("poPoints")
-        self.perfection = info.get("perfection")
 
 
 class ChickenRaces:
@@ -142,7 +109,8 @@ class ChickenRaces:
             elif react.custom_id == "prev_chicken_races":
                 self.which_page -= 1
             print("Page", self.which_page)
-            await react.edit_origin(embed=self.embeds[self.which_page-1][0], components=[self.embeds[self.which_page-1][1]])
+            await react.edit_origin(embed=self.embeds[self.which_page - 1][0],
+                                    components=[self.embeds[self.which_page - 1][1]])
 
     async def load_next_page(self):
         if len(self.embeds) > self.which_page or self.which_page >= self.pages:
