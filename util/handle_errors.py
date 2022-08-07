@@ -2,7 +2,7 @@ from pandas.core.indexing import IndexingError
 
 from util import mylogs
 
-from discord.errors import HTTPException, Forbidden,NotFound
+from discord.errors import HTTPException, Forbidden, NotFound
 from discord.ext.commands import CommandNotFound, BadArgument, MissingRequiredArgument, BadBoolArgument, \
     CommandOnCooldown
 from discord_slash.error import IncorrectFormat
@@ -48,10 +48,12 @@ async def handle_errors(exc, ctx):
         except AttributeError:
             mylogs.debug("CTX_MESSAGE_NOT_FOUND")
         mylogs.debug(f"TIMEOUT : {ctx.message.id}")
-    elif isinstance(error,NotFound):
+    elif isinstance(error, NotFound):
         mylogs.error("INTERACTION_NOT_FOUND")
-    elif isinstance(error,ValueError):
+    elif isinstance(error, ValueError):
         pass
+    elif isinstance(error, HTTPException):
+        mylogs.warning("HTTPException")
     else:
         raise error
 
