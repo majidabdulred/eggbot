@@ -38,13 +38,11 @@ class HandleComponentChickens(Race):
 
     async def run(self, raceid):
         self.raceid = raceid
-        await self.pre_ctx.defer(hidden=True)
-        data = await get_race_data(raceid)
-        if not data:
+        # await self.pre_ctx.defer(hidden=True)
+        self.model = await get_race_data(raceid)
+        if not self.model.id:
             await self.pre_ctx.send(f"Something went wrong", hidden=True)
             return
-        self.init_race_data(data)
-        del data
         embed, comps = self.create_embed()
         react = await self.chicken_paginating(self.pre_ctx)
         await react.edit_origin(embed=embed, components=[comps], hidden=True)

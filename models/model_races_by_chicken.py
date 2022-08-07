@@ -37,10 +37,12 @@ class Row:
         self.result = Result(json.get("result")) if json.get("result") else None
         self.terrain = Terrain(json.get("terrain")) if json.get("terrain") else None
 
+
 class Terrain:
     def __init__(self, json):
         self.name = json.get("name")
         self.image = json.get("image")
+
 
 class Result:
 

@@ -5,6 +5,7 @@ from models.model_races_scheduled import ScheduledRaces
 from models.model_races_results import RaceResults
 from models.model_races_by_chicken import RacesByChicken
 from models.model_get_chicken import get_chickens_model
+from models.model_race_by_id import RaceByIdModel
 API_URL = "https://api.chickenderby.com"
 
 
@@ -49,11 +50,11 @@ async def get_chicken_race_history(chickenid, page, limit):
 
 
 async def get_race_data(raceid):
-    URL = f"https://api.chickenderby.com/api/race/get-race-data?raceId={raceid}"
+    URL = f"https://api.chickenderby.com/api/races/{raceid}"
     async with request("GET", URL) as res:
         if res.status == 400:
             return None
         elif res.status != 200:
             raise ValueError("GET_RACE_DATA_ERROR", res)
         results = await res.json()
-        return results
+        return RaceByIdModel(results)

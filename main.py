@@ -25,18 +25,20 @@ class Bot(BotBase):
         super().__init__(command_prefix=PREFIX, intents=intents)
 
     def setup(self):
+        mylogs.info("LOADING_COGS")
         self.load_extension(f"cogs.commands")
         self.load_extension(f"cogs.initialise")
-        self.load_extension(f"cogs.verify")
-        self.load_extension(f"cogs.token")
-        self.load_extension(f"cogs.whitelist")
-        self.load_extension(f"cogs.profile")
+        # self.load_extension(f"cogs.verify")
+        # self.load_extension(f"cogs.token")
+        # self.load _extension(f"cogs.whitelist")
+        # self.load_extension(f"cogs.profile")
         self.load_extension(f"cogs.race")
         mylogs.info("COGS_LOADED")
 
     def run(self):
-        mylogs.info("Running Setup ....")
+        mylogs.info("SETUP_RUNNING")
         self.setup()
+        mylogs.info("SETUP_DONE")
 
         super().run(TOKEN, reconnect=True)
 
@@ -72,15 +74,15 @@ class Bot(BotBase):
                 self.loop.add_signal_handler(getattr(signal, 'SIGTERM'),
                                              lambda: self.loop.create_task(self.signal_handler()))
             except NotImplementedError:
-                mylogs.warning("Signal handlers not added")
+                mylogs.warning("SINGAL_HANDLER_NOT_IMPLEMENTED")
             self.ready = True
 
         else:
-            mylogs.warning("Bot reconnecting....")
-        mylogs.info("Ready")
+            mylogs.warning("BOT_RECONNECTING")
 
     async def signal_handler(self):
-        mylogs.critical("Time to say good bye")
+        mylogs.critical("SIGINT_RECEIVED")
+        mylogs.critical("BOT_CLOSING")
         await self.close()
 
     async def on_connect(self):

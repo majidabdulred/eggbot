@@ -85,7 +85,7 @@ class RaceModel:
 
 class RowsModel:
     def __init__(self, json):
-        self.id = json.get("id")
+        # self.id = json.get("id")
         self.raceId = json.get("raceId")
         self.chickens = []
         for chick in json.get("chickens"):

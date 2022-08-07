@@ -21,7 +21,7 @@ async def _task2(race):
 async def _task1():
     results = await get_race_results()
     for race in results.rows:
-        if await has_send(race.get('race').get("id")):
+        if await has_send(race.raceId):
             continue
         loop.create_task(_task2(race))
 
@@ -52,7 +52,7 @@ class RaceResults:
         tab.align = "l"
         race = self.model.race
         embed = Embed(title=race.name, description=f"")
-        embed.add_field(name="Time", value=race.startTime)
+        embed.add_field(name="Time", value=race.startsAt)
         embed.add_field(name="Pecking Order", value=race.peckingOrder)
         embed.add_field(name="Distance(m)", value=race.distance)
         embed.add_field(name="Fee", value=f"${race.feeUSD}")

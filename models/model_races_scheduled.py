@@ -1,6 +1,6 @@
 class UserWallet:
-    def __init__(self, username: str) -> None:
-        self.username = username
+    def __init__(self, json) -> None:
+        self.username = json.get("username")
 
 
 class Lane:
@@ -10,7 +10,7 @@ class Lane:
         self.assignedAt = json.get("assignedAt")
         self.chickenId = json.get("chickenId")
         self.userWalletId = json.get("userWalletId")
-        self.userWallet = UserWallet(json["userWallet"]) if json["userWallet"] else None
+        self.userWallet = UserWallet(json.get("userWallet")) if json.get("userWallet") else None
 
 
 class Terrain:
@@ -27,14 +27,14 @@ class RaceModel:
         self.peckingOrder = json.get("peckingOrder")
         self.terrainId = json.get("terrainId")
         self.distance = json.get("distance")
-        self.fee = json.get("fee")
+        self.fee = float(json.get("fee"))
         self.maxCapacity = json.get("maxCapacity")
         self.currentCapacity = json.get("currentCapacity")
         self.location = json.get("location")
         self.minimumStartDelay = json.get("minimumStartDelay")
         self.status = json.get("status")
         self.startTime = json.get("startTime")
-        self.prizePool = json.get("prizePool")
+        self.prizePool = float(json.get("prizePool"))
         self.paidStatus = json.get("paidStatus")
         self.unlimitPO = json.get("unlimitPO")
         self.startsAt = json.get("startsAt")

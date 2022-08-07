@@ -43,7 +43,10 @@ async def handle_errors(exc, ctx):
     if isinstance(error, TimeoutError):
         # comps = ctx.message.components
         # comps[0]["components"] = [button for button in comps[0]["components"] if "url" in button.keys()]
-        await ctx.message.edit(components=[])
+        try:
+            await ctx.message.edit(components=[])
+        except AttributeError:
+            mylogs.debug("CTX_MESSAGE_NOT_FOUND")
         mylogs.debug(f"TIMEOUT : {ctx.message.id}")
     elif isinstance(error,NotFound):
         mylogs.error("INTERACTION_NOT_FOUND")

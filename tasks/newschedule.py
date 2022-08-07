@@ -6,7 +6,7 @@ import time
 from db.local_db import server, scheduled_races
 from util.logs import mylogs
 from apis.chickenderby import get_scheduled_races
-
+from apis.weth_price import WethPrice
 loop = asyncio.get_event_loop()
 
 
@@ -16,32 +16,33 @@ def time_dif(fg):
     now = time.mktime(time.gmtime())
     return k - now
 
+
 def create_embed1(race):
-    desc = f"**Order : ** {race.peckingOrder}\n" \
-           f"**Distance : ** {race.distance}\n" \
-           f"**Fee : ** ${race.feeUSD}\n" \
-           f"**Prize Pool : ** ${race.prizePoolUSD}\n"
+    desc = f"**Order : ** {race.peckingOrder}\n" +\
+           f"**Distance : ** {race.distance}\n" +\
+           "**Fee : ** ${0:.2f}\n".format(race.fee*WethPrice.rate) +\
+           "**Prize Pool : ** ${0:.2f}\n".format(race.prizePool*WethPrice.rate)
     embed = Embed(title=race.name, description=desc)
     for n, lane in enumerate(race.lanes):
         value = lane.userWallet.username if lane.userWallet.username else f"{lane.userWalletId[:8]}..."
-        embed.add_field(name=f"Lane {n,+1}",value=value)
+        embed.add_field(name=f"Lane {n + 1}", value=value)
     buttons = [
-        create_button(style=ButtonStyle.URL, label="Watch", url=f"https://play.chickenderby.com/?raceId={race['id']}"),
+        create_button(style=ButtonStyle.URL, label="Watch", url=f"https://play.chickenderby.com/?raceId={race.id}"),
     ]
     linkbuttons = create_actionrow(*buttons)
-    embed.set_author(name="RaceModel Started")
+    embed.set_author(name=f"{race.id}")
     return embed, linkbuttons
 
 
 async def each_race(race):
     embed, comps = create_embed1(race)
-    timeleft = time_dif(race["startsAt"])
+    timeleft = time_dif(race.startsAt)
     if timeleft <= 0:
         pass
     else:
-        mylogs.info(f"RACE_ADDED : {race['id']} : {timeleft} secs")
+        mylogs.info(f"RACE_ADDED : {race.id} : {timeleft} secs")
         await asyncio.sleep(timeleft + 3)
-    mylogs.info(f"RACE_SEND : {race['id']}")
+    mylogs.info(f"RACE_SEND : {race.id}")
     await server.race_started.send(embed=embed, components=[comps])
 
 
