@@ -38,7 +38,7 @@ class HandleComponentChickens(Race):
 
     async def run(self, raceid):
         self.raceid = raceid
-        # await self.pre_ctx.defer(hidden=True)
+        await self.pre_ctx.defer(hidden=True)
         self.model = await get_race_data(raceid)
         if not self.model.id:
             await self.pre_ctx.send(f"Something went wrong", hidden=True)
