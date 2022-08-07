@@ -47,7 +47,6 @@ async def handle_errors(exc, ctx):
             await ctx.message.edit(components=[])
         except AttributeError:
             mylogs.debug("CTX_MESSAGE_NOT_FOUND")
-        mylogs.debug(f"TIMEOUT : {ctx.message.id}")
     elif isinstance(error, NotFound):
         mylogs.error("INTERACTION_NOT_FOUND")
     elif isinstance(error, ValueError):
